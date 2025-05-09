@@ -174,8 +174,3 @@ dist
 *env
 *.env
 *cache*
-
-# MacOS
-.DS_Store
-.AppleDouble
-.LSOverride
