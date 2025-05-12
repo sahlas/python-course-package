@@ -1,4 +1,4 @@
-
+"""Generate a project using cookiecutter and initialize a git repository."""
 
 
 def test_can_generate_project(project_dir):
@@ -7,5 +7,4 @@ def test_can_generate_project(project_dir):
 
     execute: `cookiecutter <template_path> ...`
     """
-
     assert project_dir.exists(), f"Project directory {project_dir} does not exist."

@@ -1,23 +1,13 @@
+"""Pytest configuration file; is executed before test collection."""
+
 import sys
+from pathlib import Path
 
-from consts import (
-    PROJECT_DIR,
-    THIS_DIR,
-)
+THIS_DIR = Path(__file__).parent
+TESTS_DIR_PARENT = (THIS_DIR / "..").resolve()
 
-PYTHONPATH = str(PROJECT_DIR)
+# ensure that `from tests ...` import statements work within the tests/ dir
+sys.path.insert(0, str(TESTS_DIR_PARENT))
 
-
-# Add the parent directory to the Python path
-sys.path.insert(0, str(PYTHONPATH))
-sys.path.insert(0, str(THIS_DIR))
-sys.path.insert(0, str(THIS_DIR / "utils"))
-sys.path.insert(0, str(THIS_DIR / "fixtures"))
-sys.path.insert(0, str(THIS_DIR / "consts"))
-
-pytest_plugins = [
-    "tests.fixtures.project_dir",
-    # "tests.fixtures.project_dir_with_config",
-    # "tests.fixtures.project_dir_with_config_and_hooks",
-    # "tests.fixtures.project_dir_with_config_and_hooks_and_pre_commit",
-]
+# register fixtures so that they can be used in tests
+pytest_plugins = ["tests.fixtures.project_dir"]
