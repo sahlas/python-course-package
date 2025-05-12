@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allows manual triggering of the workflow 
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
 
@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-    
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:

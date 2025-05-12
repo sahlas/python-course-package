@@ -60,7 +60,7 @@ repos:
           [
             --no-strict-optional,
             --ignore-missing-imports,
-            --config-file=./pyproject.toml,
+            --config-file=./pyproject.toml
           ]
 
   - repo: https://github.com/psf/black

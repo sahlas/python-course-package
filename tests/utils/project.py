@@ -1,13 +1,12 @@
+"""Generate a project using cookiecutter and initialize a git repository."""
+
 import json
 import subprocess
 from copy import deepcopy
 from pathlib import Path
 from typing import Dict
 
-from tests.consts import (
-    PROJECT_DIR,
-    THIS_DIR,
-)
+from tests.consts import PROJECT_DIR
 
 
 def initialize_git_repo(repo_dir: Path):
@@ -22,9 +21,10 @@ def initialize_git_repo(repo_dir: Path):
 
 
 def generate_project(template_values: Dict[str, str], test_session_id: str) -> Path:
+    """Generate a project directory using cookiecutter."""
     _template_values: Dict[str, str] = deepcopy(template_values)
     cookiecutter_config = {"default_context": _template_values}
-    cookiecutter_config_fpath = THIS_DIR / f"cookiecutter_test_config_{test_session_id}.json"
+    cookiecutter_config_fpath = PROJECT_DIR / f"cookiecutter_test_config_{test_session_id}.json"
     cookiecutter_config_fpath.write_text(json.dumps(cookiecutter_config))
 
     cmd = [
