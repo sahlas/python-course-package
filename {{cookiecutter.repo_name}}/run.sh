@@ -120,6 +120,12 @@ function clean {
       -name "*.pyc" \
       -not -path "*env/*" \
       -exec rm {} +
+
+    find . \
+      -type f \
+      -name "cookiecutter_test_config*.json" \
+      -not -path "*env/*" \
+      -exec rm {} + || true
 }
 
 # export the contents of .env as environment variables

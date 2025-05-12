@@ -1,0 +1,190 @@
+# .github/workflows/<some name>.yaml
+name: Build, Test and Publish
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env: # This is the environment variables section Global variables
+  TEST_PYPI_PASSWORD: ${{ secrets.TEST_PYPI_PASSWORD }}
+
+
+jobs:
+
+  check-version-txt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Tag with the release version
+        run: |
+          git tag $(cat version.txt)
+
+  lint-format-and-staic-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+            python-version: 3.13
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install Python dependencies
+        run: |
+              python -m pip install pre-commit
+      - name: Lint, format and static analysis
+        run: |
+              /bin/bash -x ./run.sh lint:ci
+
+
+  build-wheel-and-sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+      - name: Install build CLI
+        run: |
+          pip install build
+      - name: Build python package
+        run: |
+          /bin/bash -x run.sh build
+      - name: Upload wheel and sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-and-sdist
+          path: ./dist
+
+  # execute-tests:
+  #   needs:
+  #     - build-wheel-and-sdist
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up Python 3.13
+  #       uses: actions/setup-python@v5
+  #       with:
+  #             python-version: 3.13
+  #     - name: Download wheel and sdist artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: wheel-and-sdist
+  #         path: ./dist/*
+  #     - name: Display wheel and sdist
+  #       run: |
+  #         ls -Rla /home/runner/work/automating-build-process/automating-build-process/dist/
+
+  #     - name: Install test dependencies
+  #       run: |
+  #             python -m pip install pytest pytest-cov /home/runner/work/automating-build-process/automating-build-process/dist/packaging_project_bsahlas-0.0.3-py3-none-any.whl
+  #     - name: Execute tests
+  #       run: |
+  #             /bin/bash -x ./run.sh test:ci
+
+  execute-tests:
+    needs:
+      - build-wheel-and-sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - name: Download wheel and sdist
+        uses: actions/download-artifact@v4
+        with:
+          name: wheel-and-sdist
+          path: ./dist/
+      - name: Install test dependencies
+        run: |
+          pip install rich pytest pytest-cov ./dist/*.whl
+      - name: Run tests
+        run: |
+          /bin/bash -x run.sh test:ci
+
+  publish:
+    needs:
+      - execute-tests
+      - build-wheel-and-sdist
+      - lint-format-and-staic-analysis
+      - check-version-txt
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Download wheel and sdist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wheel-and-sdist
+          path: ./dist/*
+      - name: Install twine
+        run: |
+              python -m pip install twine
+              #post merge
+      - name: Publish to TestPyPI
+
+        run: |
+          /bin/bash -x run.sh publish:test
+        env:
+          TEST_PYPI_PASSWORD: ${{ secrets.TEST_PYPI_PASSWORD }} #github expression
+      - name: Publish to ProdPyPI
+
+        run: |
+          /bin/bash -x run.sh publish:prod
+        env:
+          TEST_PYPI_PASSWORD: ${{ secrets.PROD_PYPI_PASSWORD }} #github expression
+      - name: Push tags
+        run: |
+          git push origin --tags
+
+
+  # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#example-printing-context-information-to-the-log
+  dump_contexts_to_log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump secrets context
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+        run: echo "$SECRETS_CONTEXT"
+      - name: Dump runner context
+        env:
+          VARS_CONTEXT: ${{ toJson(vars) }}
+        run: echo "$VARS_CONTEXT"
