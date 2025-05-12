@@ -25,6 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+    
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
@@ -47,6 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set Git User Email
+        run: |
+          git config --global user.email "bill.sahlas@gmail.com"
+          git config --global user.name "Bill Sahlas"
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
@@ -66,6 +71,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags
+      - name: Set Git User Email
+        run: |
+          git config --global user.email "bill.sahlas@gmail.com"
+          git config --global user.name "Bill Sahlas"
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
