@@ -43,6 +43,9 @@ test-quick:
 
 test:
 	bash run.sh run-tests
+# 1. generate a project
+# 2. install our test dependencies
+# 3. execute our tests (make test; make test-wheel-locally)
 
 test-wheel-locally:
 	bash run.sh test:wheel-locally

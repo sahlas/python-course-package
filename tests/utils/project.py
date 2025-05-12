@@ -1,17 +1,28 @@
 import json
 import subprocess
 from copy import deepcopy
-from pathlib import Path
 from typing import Dict
-import shutil
+from pathlib import Path
 
+from tests.consts import (
+    PROJECT_DIR,
+    THIS_DIR,
+)
 
-from tests.consts import THIS_DIR, PROJECT_DIR 
+def initialize_git_repo(repo_dir: Path):
+    """Initialize a git repository in the given directory."""
+    # git init
+    subprocess.run(["git", "init"], cwd=repo_dir, check=True)
+    # commit the contents to the 'main' branch
+    subprocess.run(["git", "branch", "-M", "main"], cwd=repo_dir, check=True)
 
-def generate_project(template_values: Dict[str, str]):
+    subprocess.run(["git", "add", "--all"], cwd=repo_dir, check=True)
+    subprocess.run(["git", "commit", "-m", "'feat: Initial commit by pytest'"], cwd=repo_dir, check=True)
+
+def generate_project(template_values: Dict[str, str], test_session_id: str) -> Path:
     _template_values: Dict[str, str] = deepcopy(template_values)
     cookiecutter_config = {"default_context": _template_values}
-    cookiecutter_config_fpath = THIS_DIR / "cookiecutter_test_config.json"
+    cookiecutter_config_fpath = THIS_DIR / f"cookiecutter_test_config_{test_session_id}.json"
     cookiecutter_config_fpath.write_text(json.dumps(cookiecutter_config))
 
     cmd = [
