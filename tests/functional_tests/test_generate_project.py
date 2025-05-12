@@ -1,6 +1,3 @@
-
-
-
 def test_can_generate_project(project_dir):
     """
     Test the generate_project function.

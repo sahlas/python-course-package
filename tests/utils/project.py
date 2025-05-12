@@ -1,13 +1,14 @@
 import json
 import subprocess
 from copy import deepcopy
-from typing import Dict
 from pathlib import Path
+from typing import Dict
 
 from tests.consts import (
     PROJECT_DIR,
     THIS_DIR,
 )
+
 
 def initialize_git_repo(repo_dir: Path):
     """Initialize a git repository in the given directory."""
@@ -18,6 +19,7 @@ def initialize_git_repo(repo_dir: Path):
 
     subprocess.run(["git", "add", "--all"], cwd=repo_dir, check=True)
     subprocess.run(["git", "commit", "-m", "'feat: Initial commit by pytest'"], cwd=repo_dir, check=True)
+
 
 def generate_project(template_values: Dict[str, str], test_session_id: str) -> Path:
     _template_values: Dict[str, str] = deepcopy(template_values)

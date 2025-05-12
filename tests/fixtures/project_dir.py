@@ -1,10 +1,6 @@
-import json
 import shutil
 import subprocess
-import sys
-from copy import deepcopy
 from pathlib import Path
-from typing import Dict
 from uuid import uuid4
 
 import pytest
@@ -28,6 +24,7 @@ def project_dir() -> Path:  # type: ignore
         # teardown code
         # remove the generated project
         shutil.rmtree(generate_repo_dir, ignore_errors=False)
+
 
 def generate_test_session_id() -> str:
     """
