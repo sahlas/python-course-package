@@ -151,21 +151,23 @@ echo "..."
 function open-pr-with-gereated-project {
     rm -rf "$REPO_NAME" ./outdir
     install
+
     # clone the repo
     gh repo clone "$GITHUB_USERNAME/$REPO_NAME"
 
-    # delete repository contents while keeping the .git folder
-    mv "$REPO_NAME"/.git "$THIS_DIR.git.bak"
+    # delete repository contents
+    mv "$REPO_NAME/.git" "./$REPO_NAME.git.bak"
     rm -rf "$REPO_NAME"
     mkdir "$REPO_NAME"
-    mv "$THIS_DIR.git.bak" "$REPO_NAME"/.git
+    mv "./$REPO_NAME.git.bak" "$REPO_NAME/.git"
 
     # generaterate the project into the repository folder
-    OUTDIR="./outdir"
-    CONFIG_FILE_PATH="./$REPO_NAME.yaml"
+    OUTDIR="./outdir/"
+    CONFIG_FILE_PATH="./$REPO_NAME.config.yaml"
     cat <<EOF > "$CONFIG_FILE_PATH"
 default_context:
-  repo_name: "$REPO_NAME"
+  repo_name: $REPO_NAME
+  package_import_name: $PACKAGE_IMPORT_NAME
 EOF
 
      cookiecutter ./ \
@@ -178,7 +180,8 @@ EOF
     # This step is needed so that we can lint the sources
     # stage the generated files on a new feature branch
     mv "$REPO_NAME/.git" "$OUTDIR/$REPO_NAME/"
-    cd "$OUTDIR/$REPO_NAME" || return 1
+    cd "$OUTDIR/$REPO_NAME"
+
     git checkout -b "feat/populating-from-templplate"
     git add --all
 
@@ -187,18 +190,17 @@ EOF
 
     # re-stage the files modified by pre-commit hooks
     git add --all
-    git status
 
     # commit the changes and push them to the remote feature branch
-    git commit -m "feat: populated from \`python-course-cookiecutter\` template"
+    git commit -m 'feat: populated from `python-course-cookiecutter` template'
     git push origin "feat/populating-from-template"
 
     # open a PR from the feature branch to the main branch
     gh pr create \
-        --base main \
-        --head "feat/populating-from-template" \
         --title "feat: populated from \`python-course-cookiecutter\` template" \
         --body "This PR was created by the \`python-course-cookiecutter\` template." \
+        --base main \
+        --head "feat/populating-from-template" \
         --repo "$GITHUB_USERNAME/$REPO_NAME"
 }
 
