@@ -20,7 +20,7 @@ jobs:
         run: |
           git tag $(cat version.txt)
 
-  lint-format-and-staic-analysis:
+  lint-format-and-static-analysis:
     runs-on: ubuntu-latest
 
     steps:
@@ -63,6 +63,8 @@ jobs:
 
   push-tags:
     needs:
+      - execute-tests
+      - lint-format-and-static-analysis
       - check-version-txt
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
