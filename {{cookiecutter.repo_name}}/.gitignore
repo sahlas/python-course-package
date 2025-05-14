@@ -174,3 +174,6 @@ dist
 *env
 *.env
 *cache*
+
+# macOS
+.DS_Store
