@@ -148,7 +148,7 @@ echo "..."
 #   REPO_NAME - the name of the repo to create
 #   GITHUB_USERNAME - the username of the user creating the repo
 
-function open-pr-with-gereated-project {
+function open-pr-with-generated-project {
     rm -rf "$REPO_NAME" ./outdir
     install
 
