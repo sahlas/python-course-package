@@ -6,9 +6,10 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
+from click import echo
 
 # pylint: disable=no-name-in-module
-from tests.utils.project import (
+from tests.utils.generate_project import (
     generate_project,
     initialize_git_repo,
 )
@@ -22,7 +23,10 @@ def project_dir() -> Path:  # type: ignore
     This fixture generates a unique project directory for each test session.
     """
     test_session_id: str = generate_test_session_id()
-    template_values = {"repo_name": f"test-repo-{test_session_id}"}
+    template_values = {
+        "repo_name": f"test-repo-{test_session_id}",
+        "package_import_name": f"test_package_{test_session_id}",
+    }
     generate_repo_dir: Path = generate_project(template_values=template_values, test_session_id=test_session_id)
     try:
         initialize_git_repo(generate_repo_dir)
@@ -31,7 +35,8 @@ def project_dir() -> Path:  # type: ignore
     finally:
         # teardown code
         # remove the generated project
-        shutil.rmtree(generate_repo_dir, ignore_errors=False)
+        echo(f"Removing the generated project directory: {generate_repo_dir}")
+        shutil.rmtree(generate_repo_dir)
 
 
 def generate_test_session_id() -> str:

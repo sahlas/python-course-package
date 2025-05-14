@@ -1,6 +1,6 @@
-"""Unit tests for `src.example_pkg`."""
+"""Unit tests for `{{cookiecutter.package_import_name}}`."""
 import pytest
-from example_pkg.states_info import (
+from  {{cookiecutter.package_import_name}}.states_info import (
     is_city_capitol_of_state,
     slow_add,
 )
@@ -24,3 +24,4 @@ def test__is_city_capitol_of_state(city_name: str, state: str, is_capitol: bool)
 def test__slow_add():
     """Assert `slow_add()`."""
     assert slow_add(1, 2) == 3
+

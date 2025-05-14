@@ -1,1 +1,1 @@
-"""src.example_pkg.__init__.py folder."""
+"""src.{{cookiecutter.package_import_name}}.__init__.py folder."""
