@@ -174,7 +174,7 @@ EOF
         --output-dir "$OUTDIR" \
         --no-input \
         --config-file $CONFIG_FILE_PATH
-    rm $CONFIG_FILE_PATH
+    # rm $CONFIG_FILE_PATH
 
 
     # This step is needed so that we can lint the sources
@@ -182,7 +182,7 @@ EOF
     mv "$REPO_NAME/.git" "$OUTDIR/$REPO_NAME/"
     cd "$OUTDIR/$REPO_NAME"
 
-    git checkout -b "feat/populating-from-templplate"
+    git checkout -b "feat/populating-from-template"
     git add --all
 
     # apply formatting and linting autofixes to the generated files

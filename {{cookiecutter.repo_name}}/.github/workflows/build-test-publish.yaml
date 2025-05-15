@@ -19,7 +19,7 @@ jobs:
   check-version-txt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Tag with the release version
@@ -28,12 +28,19 @@ jobs:
 
   lint-format-and-static-code-checks:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+            python-version: 3.13
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
       - name: Install pre-commit
         run: |
           pip install pre-commit
@@ -44,11 +51,11 @@ jobs:
   build-wheel-and-sdist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: 3.13
       - name: Install build CLI
         run: |
           pip install build
@@ -56,7 +63,7 @@ jobs:
         run: |
           /bin/bash -x run.sh build
       - name: Upload wheel and sdist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wheel-and-sdist
           path: ./dist/*
@@ -66,13 +73,13 @@ jobs:
       - build-wheel-and-sdist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.3.13
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.3.13
       - name: Download wheel and sdist
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: wheel-and-sdist
           path: ./dist/
@@ -92,13 +99,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.3.13
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.3.13
       - name: Download wheel and sdist
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: wheel-and-sdist
           path: ./dist/
