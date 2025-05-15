@@ -182,7 +182,7 @@ EOF
     mv "$REPO_NAME/.git" "$OUTDIR/$REPO_NAME/"
     cd "$OUTDIR/$REPO_NAME"
 
-    git checkout -b "feat/populating-from-templplate"
+    git checkout -b "feat/populating-from-template"
     git add --all
 
     # apply formatting and linting autofixes to the generated files
