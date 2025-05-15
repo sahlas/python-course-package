@@ -174,7 +174,7 @@ EOF
         --output-dir "$OUTDIR" \
         --no-input \
         --config-file $CONFIG_FILE_PATH
-    # rm $CONFIG_FILE_PATH
+    rm $CONFIG_FILE_PATH
 
 
     # This step is needed so that we can lint the sources
