@@ -30,8 +30,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run:
-          bash run.sh create-repo-if-not-exists
+      - run: |
+          bash -x run.sh create-repo-if-not-exists
         env:
           REPO_NAME: ${{ github.event.inputs.repo_name }}
           GITHUB_USERNAME: sahlas
@@ -45,7 +45,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          bash run.sh configure-repo
+          bash -x run.sh configure-repo
         env:
           REPO_NAME: ${{ github.event.inputs.repo_name }}
           GITHUB_USERNAME: sahlas
@@ -61,7 +61,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          bash run.sh open-pr-with-generated-project
+          bash -x run.sh open-pr-with-generated-project
         env:
           REPO_NAME: ${{ github.event.inputs.repo_name }}
           GITHUB_USERNAME: sahlas
