@@ -7,7 +7,7 @@ on:
         description: 'Name of the repository to create'
         required: true
         type: string
-        default: 'my-repo'      
+        default: 'my-repo'
       is_public_repo:
         description: 'If unchecked, the repository will be private'
         required: true
