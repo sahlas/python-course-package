@@ -129,6 +129,11 @@ function push-initial-readme-to-repo {
     git branch -M main || true
     git add --all
     git commit -m "feat: created repo $GITHUB_USERNAME/$REPO_NAME" README.md
+    
+    # if GH_TOKEN is set, set the remote url to it
+    if [[ -n "$GH_TOKEN" ]]; then
+        git remote set-url origin "https://$GITHUB_USERNAME:$GH_TOKEN@github.com/sahlas/$REPO_NAME"
+    fi
     git push origin main
 }
 
@@ -159,7 +164,7 @@ function configure-repo {
     -F "required_status_checks[checks][][context]=lint-format-and-static-code-checks" \
     -F "required_status_checks[checks][][context]=build-wheel-and-sdist" \
     -F "required_status_checks[checks][][context]=execute-tests" \
-    -F "required_pull_request_reviews[required_approving_review_count]=1" \
+    -F "required_pull_request_reviews[required_approving_review_count]=0" \
     -F "enforce_admins=null" \
     -F "restrictions=null" > /dev/null
 }
@@ -216,6 +221,11 @@ EOF
 
     # commit the changes and push them to the remote feature branch
     git commit -m 'feat: populated from `python-course-cookiecutter` template'
+
+    #if GH_TOKEN is set, set the remote url to it
+        if [[ -n "$GH_TOKEN" ]]; then
+        git remote set-url origin "https://$GITHUB_USERNAME:$GH_TOKEN@github.com/sahlas/$REPO_NAME"
+    fi
     git push origin "$UNIQUE_BRANCH_NAME"
 
     # open a PR from the feature branch to the main branch
@@ -229,9 +239,9 @@ EOF
 
 
 function create-sample-repo {
-    git add . \
-    && git commit -m "fix: debugging the create-or-update-repo.yaml workflow"
-    git push origin main || true
+    git add .github/ \
+    && git commit -m "fix: debugging the create-or-update-repo.yaml workflow" \
+    && git push origin main || true
 
     gh workflow run .github/workflows/create-or-update-repo.yaml \
         -f repo_name=generated-repo-2 \

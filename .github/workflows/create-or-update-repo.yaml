@@ -30,6 +30,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Configure git user
+        run: |
+          git config --global user.email "git-bot-user@python-course.com"
+          git config --global user.name "Git Bot User"
       - run: |
           bash -x run.sh create-repo-if-not-exists
         env:
@@ -44,6 +48,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Configure git user
+        run: |
+          git config --global user.email "git-bot-user@python-course.com"
+          git config --global user.name "Git Bot User"
       - run: |
           bash -x run.sh configure-repo
         env:
@@ -60,10 +68,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Configure git user
+        run: |
+          git config --global user.email "git-bot-user@python-course.com"
+          git config --global user.name "Git Bot User"
       - run: |
           bash -x run.sh open-pr-with-generated-project
         env:
           REPO_NAME: ${{ github.event.inputs.repo_name }}
+          PACKAGE_IMPORT_NAME: ${{ github.event.inputs.package_import_name}}
           GITHUB_USERNAME: sahlas
           TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
           PROD_PYPI_TOKEN: ${{ secrets.PROD_PYPI_TOKEN }}
