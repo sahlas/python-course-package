@@ -19,6 +19,9 @@ on:
         default: 'my_package'
         type: string
 
+env:
+  GH_TOKEN: ${{secrets.PERSONAL_GITHUB_TOKEN}}
+
 
 jobs:
   create-repo-if-not-exists:
@@ -35,6 +38,7 @@ jobs:
           IS_PUBLIC_REPO: ${{ github.event.inputs.is_public_repo }}
 
   configure-repo:
+      needs: [create-repo-if-not-exists]
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v4
@@ -50,6 +54,7 @@ jobs:
 
 
   open-pr-with-generated-project:
+    needs: [create-repo-if-not-exists]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
