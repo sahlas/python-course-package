@@ -121,23 +121,4 @@ jobs:
           git push origin --tags
 
   # https://docs.github.com/en/actions/learn-github-actions/contexts#example-printing-context-information-to-the-log
-  dump-contexts-to-log:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo '{% raw %}${{ toJSON(github) }}{% endraw %}'
-      - name: Dump job context
-        run: echo '{% raw %}${{ toJSON(job) }}' {% endraw %}'
-      - name: Dump steps context
-        run: echo '{% raw %}${{ toJSON(steps) }}'{% endraw %}'
-      - name: Dump runner context
-        run: echo '{% raw %}${{ toJSON(runner) }}{% endraw %}'
-      - name: Dump strategy context
-        run: echo '{% raw %}${{ toJSON(strategy) }}{% endraw %}'
-      - name: Dump matrix context
-        run: echo '{% raw %}${{ toJSON(matrix) }}{% endraw %}'
-      - name: Dump secrets
-        run: echo '{% raw %}${{ toJSON(secrets) }}{% endraw %}'
-      - name: Dump vars
-        run: echo '{% raw %}${{ toJSON(vars) }}'{% endraw %}'
+
