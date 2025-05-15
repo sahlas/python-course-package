@@ -227,6 +227,19 @@ EOF
         --repo "$GITHUB_USERNAME/$REPO_NAME"
 }
 
+
+function create-sample-repo {
+    git add .
+    git commit -m "fix: debugging the create-or-update-repo.yaml workflow"
+    git push origin section-16/173
+
+    gh workflow run .github/workflow/create-or-update-repo.yaml
+        -f repo_name=generated-repo-2 \
+        -f package_import_name=generated_repo_2 \
+        -f is_public_repo=true \
+        --ref section-16/173
+}
+
 # print all functions in this file
 function help {
     echo "$0 <task> <args>"
