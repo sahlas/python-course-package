@@ -233,7 +233,7 @@ function create-sample-repo {
     git commit -m "fix: debugging the create-or-update-repo.yaml workflow"
     git push origin section-16/173
 
-    gh workflow run .github/workflows/create-or-update-repo.yaml
+    gh workflow run .github/workflows/create-or-update-repo.yaml \
         -f repo_name=generated-repo-2 \
         -f package_import_name=generated_repo_2 \
         -f is_public_repo=true \
