@@ -25,3 +25,6 @@ lint:
 
 lint-ci:
 	bash run.sh lint:ci
+
+create-sample-repo:
+	bash run.sh create-sample-repo
