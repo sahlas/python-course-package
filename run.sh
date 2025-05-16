@@ -114,7 +114,7 @@ function create-repo-if-not-exists {
     echo "Creating repo $GITHUB_USERNAME/$REPO_NAME..."
     gh repo create "$GITHUB_USERNAME/$REPO_NAME" "--$PUBLIC_OR_PRIVATE"
 
-    push-initial-readme-to-repo "$REPO_NAME" "$GITHUB_USERNAME"
+    push-initial-readme-to-repo
 
 }
 
@@ -129,7 +129,7 @@ function push-initial-readme-to-repo {
     git branch -M main || true
     git add --all
     git commit -m "feat: created repo $GITHUB_USERNAME/$REPO_NAME" README.md
-    
+
     # if GH_TOKEN is set, set the remote url to it
     if [[ -n "$GH_TOKEN" ]]; then
         git remote set-url origin "https://$GITHUB_USERNAME:$GH_TOKEN@github.com/sahlas/$REPO_NAME"
