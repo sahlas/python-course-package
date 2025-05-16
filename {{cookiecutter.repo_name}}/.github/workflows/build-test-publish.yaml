@@ -136,10 +136,10 @@ jobs:
         run: echo '{% raw %}${{ toJSON(steps) }}'{% endraw %}
       - name: Dump runner context
         run: echo '{% raw %}${{ toJSON(runner) }}'{% endraw %}
-      - name: Dump strategy context
-        run: echo '{% raw %}${{ toJSON(strategy) }}'{% endraw %}
-      - name: Dump matrix context
-        run: echo '{% raw %}${{ toJSON(matrix) }}'{% endraw %}
+      # - name: Dump strategy context
+      #   run: echo '{% raw %}${{ toJSON(strategy) }}'{% endraw %}
+      # - name: Dump matrix context
+      #   run: echo '{% raw %}${{ toJSON(matrix) }}'{% endraw %}
       - name: Dump secrets
         run: echo '{% raw %}${{ toJSON(secrets) }}'{% endraw %}
       - name: Dump vars
